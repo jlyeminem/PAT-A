@@ -1,0 +1,17 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+using namespace std;
+vector<double> vec;
+int n;
+int main(){
+	cin>>n;
+	double sum=0;
+	vec.resize(n);
+	for(int i=0;i<n;i++){
+		cin>>vec[i];
+		sum+=vec[i]*(n-i)*(i+1);    //找规律，，统计每个数字出现的个数；
+	}
+	printf("%.2f",sum);
+	return 0;
+}
