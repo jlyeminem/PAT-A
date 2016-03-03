@@ -1,0 +1,45 @@
+//解题思路：正向遍历数组一遍，用一个数来记录左边最大值，对于所有满足大于左边最大的数进行标记，再反向遍历数组一边。
+//用一个数来记录右边最小值，对于所有满足小于右边最小的数进行二次标记，两次都有标记的数据就是满足要求的数据。
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int n;
+int main(){
+	cin>>n;
+	vector<int> vec(n+1);
+	for(int i=1;i<=n;i++){
+		cin>>vec[i];
+	}
+	int maxl=0;int minr=10000000000;
+	vector<int> ans;
+	vector<int> flag(n+1,0);
+	for(int i=1;i<=n;i++){
+		if(vec[i]>maxl){
+			flag[i]++;
+			maxl=vec[i];
+		}
+	}
+	for(int i=n;i>0;i--){
+		if(vec[i]<=minr){
+			minr=vec[i];
+			flag[i]++;
+		}
+	}
+	for(int i=1;i<=n;i++){
+		if(flag[i]==2){
+			ans.push_back(vec[i]);
+		}
+	}
+	sort(ans.begin(),ans.end());
+	cout<<ans.size()<<endl;
+	for(int i=0;i<ans.size();i++){
+		if(i==0){
+			cout<<ans[i];
+		}else{
+			cout<<" "<<ans[i];
+		}
+	}
+	cout<<endl;
+	return 0;
+}
