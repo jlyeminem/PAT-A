@@ -1,0 +1,73 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int N;
+bool cmp(int a,int b){
+	return a>b;
+}
+int main(){
+	cin>>N;
+	vector<int> vec(N);
+	for(int i=0;i<N;i++){
+		cin>>vec[i];
+	}
+	sort(vec.begin(),vec.end(),cmp);   //向量的倒序排序
+	int m,n,minDiff=99999,tmpm=0,tmpn=0;
+	while(tmpm<N){
+		tmpm++;
+		if(N%tmpm==0){
+			tmpn=N/tmpm;
+			if(tmpm>=tmpn&&tmpm-tmpn<minDiff){
+				m=tmpm;
+				n=tmpn;
+				minDiff=tmpm-tmpn;
+			}
+		}
+	}
+	if(m==N || n==1){  
+		for(int i=0; i<vec.size(); i++)  
+			cout<<vec[i]<<endl;  
+			return 0;         
+    }  
+	vector<vector<int>> matrix;
+	matrix.resize(m+2,vector<int>(n+2,0));//二维向量的构造
+	int index=0,right=n,left=0,top=0,low=m;int k=0,j=0;
+	while(true){
+		for(k=left;k<right;k++){
+			matrix[j][k]=vec[index++];
+		}
+		top++;
+		k=k--;
+		if(index>=N) break;
+		for(j=top;j<low;j++){
+			matrix[j][k]=vec[index++];
+		}
+		right--;
+		j=j--;
+		if(index>=N) break;
+		for(k=right-1;k>=left;k--){
+			matrix[j][k]=vec[index++];
+		}
+		low--;
+		k++;
+		if(index>=N) break;
+		for(j=low-1;j>=top;j--){
+			matrix[j][k]=vec[index++];
+		}
+		left++;
+		j++;
+		if(index>=N) break;
+	}
+	for(int i=0;i<m;i++){
+		for(j=0;j<n;j++){
+			if(j==0){
+				cout<<matrix[i][j];
+			}else{
+				cout<<" "<<matrix[i][j];
+			}
+		}
+		cout<<endl;
+	}
+	return 0;
+}
