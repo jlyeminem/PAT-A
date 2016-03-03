@@ -1,0 +1,54 @@
+//dfs的回溯剪枝
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<algorithm>
+using namespace std;
+int N,K,P;
+int maxsum=0;
+vector<int> ans;
+int solve(int n){
+	if(n==1) return 1;  
+    int factor = n;  
+    for(int i = 1; i < P; i++) n *= factor;  
+    return n; 
+
+}
+void dfs(int n,int cur,vector<int> &vec){
+	if(cur==K){
+		if(n==0){
+			int sum=0;
+			for(int i=0;i<vec.size();i++) sum+=vec[i];
+			if(sum>=maxsum){
+				ans=vec;
+				maxsum=sum;
+			}
+			return;
+		}else return; //回溯剪枝
+	}
+	int up=sqrt((double)n);
+	int low=cur>0? vec[cur-1] : 1;
+	for(int i=low;i<=up;i++){
+		int q=solve(i);
+		if(q<=n){
+			vec[cur]=i;
+			dfs(n-q,cur+1,vec);
+		}else return; //回溯剪枝
+	}
+	return;
+}
+int main(){
+	cin>>N>>K>>P;
+	vector<int> vec(K);
+	dfs(N,0,vec);
+	reverse(ans.begin(),ans.end());  //向量翻转
+	if(ans.size()==K){
+		cout<<N<<" "<<"=";
+		for(int i=0;i<ans.size()-1;i++){
+			cout<<" "<<ans[i]<<"^"<<P<<" +";
+		}
+		int i=ans.size()-1;
+		cout<<" "<<ans[i]<<"^"<<P<<endl;
+	}else cout<<"Impossible"<<endl;
+	return 0;
+}
