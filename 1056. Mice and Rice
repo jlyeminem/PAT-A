@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int Np,Ng;
+int main(){
+//	freopen("in.txt","r",stdin);
+	cin>>Np>>Ng;
+	vector<int> weight(Np);
+	vector<int> p(Np);
+	vector<int> rank(Np);
+	for(int i=0;i<Np;i++){
+		cin>>weight[i];
+	}
+	for(int i=0;i<Np;i++){ 
+		cin>>p[i];
+	}
+	int remain=Np,maxIdx,maxWeight;
+	while(remain>1){
+		int Rank=(remain+Ng-1)/Ng,num=0;
+		 maxIdx=p[0];
+		maxWeight=weight[p[0]];
+		rank[p[0]]=Rank+1;
+		for(int i=1;i<remain;i++){			
+			rank[p[i]]=Rank+1;
+			if(i%Ng==0){
+				p[num++]=maxIdx;
+				maxWeight=weight[p[i]];
+				maxIdx=p[i];
+			}else{
+				if(weight[p[i]]>maxWeight){
+					maxIdx=p[i];
+					maxWeight=weight[p[i]];
+				}
+			}
+		}
+		p[num]=maxIdx;
+		remain=Rank;
+	}
+	rank[p[0]]=1;
+	for(int i=0;i<rank.size();i++){
+		if(i) cout<<" ";
+		cout<<rank[i];
+	}
+	cout<<endl;
+	return 0;
+}
