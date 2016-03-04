@@ -1,0 +1,114 @@
+//dijkstra:找出离源点最近的点更新其它点的距离.
+//map<key,value>
+#include<iostream>
+#include<vector>
+#include<map>
+#include<string>
+using namespace std;
+const int infinity=35565;
+int N,K;
+map<string,int> cId;
+vector<vector<int>> cost;
+vector<bool> visited;
+vector<string> cName;
+vector<int> cHapp;
+vector<int> path;
+vector<int> totalCost;
+vector<int> numOfRout;
+vector<int> totalHapp;
+vector<int> citiesInRout;
+string startCity;
+void dijkstra(){
+	totalCost[0]=0;
+	numOfRout[0]=1;
+	citiesInRout[0]=0;
+	int k;//k为每一轮花费最少的city
+	for(int i=0;i<N;i++){
+		int k=-1;
+		for(int j=0;j<N;j++){
+			if(!visited[j]&&(k<0||totalCost[j]<totalCost[k])){
+				k=j;
+			}
+		}
+		visited[k]=true;
+		for(int j=0;j<N;j++){
+			if(!visited[j]){
+				if(totalCost[j]>cost[k][j]+totalCost[k]){
+					totalCost[j]=cost[k][j]+totalCost[k];
+					numOfRout[j]=numOfRout[k];
+					totalHapp[j]=totalHapp[k]+cHapp[j];
+					path[j]=k;
+					citiesInRout[j]=citiesInRout[k]+1;
+				}else if(totalCost[j]==cost[k][j]+totalCost[k]){
+					numOfRout[j]+=numOfRout[k];
+					if(totalHapp[j]<totalHapp[k]+cHapp[j]){
+						totalHapp[j]=totalHapp[k]+cHapp[j];
+						path[j]=k;
+						citiesInRout[j]=citiesInRout[k]+1;
+					}else if(totalHapp[j]==totalHapp[k]+cHapp[j]){
+						if(citiesInRout[j]>citiesInRout[k]+1){
+							path[j]=k;
+							citiesInRout[j]=citiesInRout[k]+1;
+						}
+					}
+				}
+				/*else if(totalCost[j]==cost[k][j]+totalCost[k]) {
+                    numOfRout[j] += numOfRout[k];
+                    if(totalHapp[j] < (totalHapp[k] + cHapp[j])
+                     || (totalHapp[j]==totalHapp[k]+cHapp[j]
+                     && citiesInRout[j] > citiesInRout[k]+1)) {
+                        path[j] = k;
+                        totalHapp[j] = totalHapp[k] + cHapp[j];
+                        citiesInRout[j] = citiesInRout[k]+1;
+                    }
+                }*/
+
+			}
+		}
+	}
+}
+int main(){
+	cin>>N>>K>>startCity;
+	cId[startCity]=0;
+	cost.resize(N,vector<int>(N,infinity));
+	cName.resize(N);
+	cHapp.resize(N);
+	path.resize(N,-1);
+	totalHapp.resize(N,0);
+	citiesInRout.resize(N,infinity);
+	totalCost.resize(N,infinity);
+	numOfRout.resize(N,0);
+	visited.resize(N,false);
+	cName[0]=startCity;
+	for(int i=1;i<N;i++){
+		string tmpstr;int tmpint;
+		cin>>tmpstr>>tmpint;
+		cName[i]=tmpstr;
+		cHapp[i]=tmpint;
+		cId[tmpstr]=i;
+	}
+	for(int i=0;i<K;i++){
+		string str1,str2;int cost1,c1,c2;
+		cin>>str1>>str2>>cost1;
+		c1=cId[str1];c2=cId[str2];
+		cost[c1][c2]=cost1;
+		cost[c2][c1]=cost1;
+	}
+	int d=cId["ROM"];
+	dijkstra();
+	cout<<numOfRout[d]<<" "<<totalCost[d]<<" "<<totalHapp[d]<<" "<<totalHapp[d]/citiesInRout[d]<<endl;
+	vector<string> ans;
+	int j=d;
+	while(j!=-1){
+		ans.push_back(cName[j]);
+		j=path[j];
+	}
+	for(int i=ans.size()-1;i>=0;i--){
+		if(0==i){
+			cout<<ans[i]<<endl;
+		}else{
+			cout<<ans[i]<<"->";
+		}
+	}
+	return 0;
+}
