@@ -1,0 +1,56 @@
+//dfs回溯   map的使用与遍历
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<map>
+using namespace std;
+typedef long long ll;
+ll N;
+bool isPrime(ll x){
+	for(ll i=2;i<sqrt(double(x));i++){
+		if(x%i==0){
+			return false;
+		}
+	}
+	return true;
+}
+void dfs(ll n,ll x,map<ll,int> &ans){
+	if(n==1) return; 
+	if(n%x==0){
+		ans[x]++;
+		n=n/x;
+		dfs(n,x,ans);
+	}else{
+		while(x<=n){			
+			x++;
+			if(n%x==0&&isPrime(x)){
+				ans[x]++;
+				n=n/x;
+				dfs(n,x,ans);
+				return;
+			}						
+		}
+	}
+}
+int main(){
+	cin>>N;
+	if(N==1){
+		cout<<"1=1"<<endl;            //测试点N=1，需要另处理
+		return 0;
+	}
+	map<ll,int> ans;
+	dfs(N,2,ans);
+	map<ll,int>::iterator iter;
+	cout<<N<<"=";int cnt=0;
+	for(iter=ans.begin();iter!=ans.end();iter++){
+		if(cnt) cout<<"*";
+		if(iter->second>1){
+			cout<<iter->first<<"^"<<iter->second;
+		}else{
+			cout<<iter->first;
+		}
+		cnt++;
+	}
+	cout<<endl;
+	return 0;
+}
