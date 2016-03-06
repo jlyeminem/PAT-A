@@ -1,0 +1,36 @@
+//二叉搜索树中序遍历序列自然有序
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+int N;
+vector<int> vec;
+int k=0;
+void dfs(vector<int> &values,int n,int j){
+	if(2*j+1<n){   //满二叉树表现在可用下标寻左右子节点。根节点为0时，节点i的左右子节点为（2*i+1）和（2*i+2）
+		int x=2*j+1;
+		dfs(values,n,x);
+	}
+	values[j]=vec[k++];
+	if(2*j+2<n){
+		int x=2*j+2;
+		dfs(values,n,x);
+	}
+}
+int main(){
+//	freopen("1064.txt","r",stdin);
+	cin>>N;
+	vec.resize(N);
+	for(int i=0;i<N;i++){
+		cin>>vec[i];
+	}
+	sort(vec.begin(),vec.end());
+	vector<int> values(N);
+	dfs(values,N,0);
+	for(int i=0;i<values.size();i++){
+		if(i) cout<<" ";
+		cout<<values[i];
+	}
+	cout<<endl;
+	return 0;
+}
