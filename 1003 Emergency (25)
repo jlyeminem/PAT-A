@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int N,M,S,D;
+vector<int> num;
+vector<int> totalLength;
+//vector<int> path;
+vector<int> totalNum;
+vector<bool> visited;
+vector<int> ans;
+vector<vector<int>> edge;
+void dijkstra(int s){
+	totalLength[s]=0;
+	totalNum[s]=num[s];
+	int k;
+	for(int i=0;i<N;i++){
+		int k=-1;
+		for(int j=0;j<N;j++){
+			if(!visited[j]&&(k<0||totalLength[j]<totalLength[k])){
+				k=j;
+			}
+		}
+		visited[k]=true;
+		for(int j=0;j<N;j++){
+			if(totalLength[j]>edge[k][j]+totalLength[k]){
+				totalLength[j]=edge[k][j]+totalLength[k];
+				totalNum[j]=num[j]+totalNum[k];
+				ans[j]=ans[k];
+//				path[j]=i;
+			}else if(totalLength[j]==edge[k][j]+totalLength[k]){
+				ans[j]++;
+				if(totalNum[j]<num[j]+totalNum[k]){
+					totalNum[j]=num[j]+totalNum[k];
+//					path[j]=i;;
+				}
+			}
+		}
+	}
+	cout<<ans[D]<<" "<<totalNum[D]<<endl;
+}
+int main(){
+//	freopen("in.txt","r",stdin);
+	cin>>N>>M>>S>>D;
+	num.resize(N+1);
+	ans.resize(N+1,1);
+	visited.resize(N+1,false);
+	totalNum.resize(N+1,0);
+	totalLength.resize(N+1,65535);
+	edge.resize(N+1,vector<int>(N+1,65535));
+	for(int i=0;i<N;i++){
+		cin>>num[i];
+	}
+	for(int i=0;i<M;i++){
+		int j,k,l;
+		cin>>j>>k>>l;
+		edge[j][k]=edge[k][j]=min(edge[j][k],l);
+	}
+//	totalNum=num;
+	dijkstra(S);
+	return 0;
+}
